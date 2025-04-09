@@ -13,7 +13,7 @@ import {
   DarkThemeToggle
 } from "flowbite-react";
 
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { logout } from '../redux/slices/authSlice';
 
@@ -49,9 +49,11 @@ const Header = () => {
       {/* Right side: Avatar + Cart Icon */}
       <div className="flex items-center gap-4 md:order-2">
         {/* Cart Icon */}
-        <button className="cursor-pointer text-gray-700 dark:text-white hover:text-green-600">
+        <Link to={"/cart"}>
+        <button className="cursor-pointer text-gray-700 dark:text-gray-700 hover:text-green-600">
           <i className="fa-solid fa-cart-shopping fa-xl"></i>
         </button>
+        </Link>
 
         {/* Avatar dropdown */}
         <Dropdown

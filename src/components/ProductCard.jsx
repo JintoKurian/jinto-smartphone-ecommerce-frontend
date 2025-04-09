@@ -1,44 +1,57 @@
 import React from "react";
 import { Link } from "react-router-dom";
-
+import { useSelector } from "react-redux";
+import { addToCart } from "../services/allAPI";
 
 const ProductCard = ({ product }) => {
-//   useEffect(() => {
-//     console.log(product);
-//   }, []);
+  const user = useSelector((state) => state.auth.user);
+  const token = useSelector((state) => state.auth.token);
+
+  const handleAddToCart = async (productId) => {
+    try {
+      const response = await addToCart({ userId: user._id, productId }, token);
+      console.log("Added to cart:", response.data);
+      // Optionally show a toast here
+    } catch (err) {
+      console.error("Error adding to cart:", err.response?.data || err.message);
+    }
+  };
 
   return (
-    <Link to={`/product/${product._id}`}>
     <div className="w-[270px] dark:bg-white dark:bg-gray-800 dark:text-black rounded-2xl shadow-lg p-4 m-3 flex flex-col items-center">
-    <img
-      src={product.image}
-      alt={product.name}
-      className="w-40 h-40 object-contain mb-3"
-    />
-    <h3 className="text-lg font-semibold">{product.name}</h3>
-    <p className="text-sm">
-      <strong>Brand:</strong> {product.brand}
-    </p>
-    <p className="text-sm">
-      <strong>Model:</strong> {product.model}
-    </p>
-    <p className="text-xs mt-2 text-gray-600 dark:text-gray-900 line-clamp-2">
-      {product.description}
-    </p>
-    <div className="mt-3 w-full flex justify-between items-center">
-      <p className="text-lg font-bold">₹{product.price}</p>
-      <div className="space-x-2">
-        <button className="px-3 py-1 rounded-md bg-blue-600 text-white hover:bg-blue-700 text-sm">
-          Add to cart
-        </button>
-        <button className="px-3 py-1 rounded-md bg-yellow-400 text-black hover:bg-yellow-500 text-sm">
-          Buy
-        </button>
+      <Link to={`/product/${product._id}`} className="w-full text-center">
+        <img
+          src={product.image}
+          alt={product.name}
+          className="w-40 h-40 object-contain mb-3"
+        />
+        <h3 className="text-lg font-semibold">{product.name}</h3>
+        <p className="text-sm">
+          <strong>Brand:</strong> {product.brand}
+        </p>
+        <p className="text-sm">
+          <strong>Model:</strong> {product.model}
+        </p>
+        <p className="text-xs mt-2 text-gray-600 dark:text-gray-900 line-clamp-2">
+          {product.description}
+        </p>
+      </Link>
+
+      <div className="mt-3 w-full flex justify-between items-center">
+        <p className="text-lg font-bold">₹{product.price}</p>
+        <div className="space-x-2">
+          <button
+            onClick={() => handleAddToCart(product._id)}
+            className="px-3 py-1 rounded-md bg-blue-600 text-white hover:bg-blue-700 text-sm"
+          >
+            Add to cart
+          </button>
+          <button className="px-3 py-1 rounded-md bg-yellow-400 text-black hover:bg-yellow-500 text-sm">
+            Buy
+          </button>
+        </div>
       </div>
     </div>
-  </div>
-  </Link>
-  
   );
 };
 
