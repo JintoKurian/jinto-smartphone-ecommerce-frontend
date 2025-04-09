@@ -14,16 +14,19 @@ import {
 } from "flowbite-react";
 
 import { useNavigate } from 'react-router-dom';
-import { logout } from '../utils/auth';
+import { useDispatch } from 'react-redux';
+import { logout } from '../redux/slices/authSlice';
+
 
 
 // Ensure Font Awesome is loaded (via index.html or npm)
 
 const Header = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleLogout = ()=>{
-    logout();
+    dispatch(logout());
     navigate('/login');
   }
 

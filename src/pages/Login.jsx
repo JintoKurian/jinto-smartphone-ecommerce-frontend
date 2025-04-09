@@ -1,25 +1,33 @@
 import React, { useState } from 'react';
 import { loginUser } from '../services/allAPI';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { loginSuccess } from '../redux/slices/authSlice';
+import { Spinner } from 'flowbite-react';
 
 
 
 const Login = () => {
 
   const [credentials, setCredentials] = useState({ email: '', password: '' });
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
       const res = await loginUser(credentials);
 
-      const { token, user } = res.data;
+      localStorage.setItem('token', res.data.token);
+      localStorage.setItem('user', JSON.stringify(res.data.user));
 
-      //Store in localStorage
-      localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(user));
+      dispatch(loginSuccess({token: res.data.token, user:res.data.user}));
+
+      
 
       alert('Login successfull');
       navigate('/');
@@ -28,7 +36,9 @@ const Login = () => {
       alert('Login failed. Please Check your credentials.');
       console.log(error);
       
-    }
+    } finally {
+      setLoading(false);
+    } 
   }
 
 
@@ -52,9 +62,26 @@ const Login = () => {
           onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
           required
         />
-        <button type="submit" className="bg-blue-600 text-white py-2 rounded w-full hover:bg-blue-700">
-          Login
-        </button>
+
+<button
+  disabled={loading}
+  type="submit"
+  className={`text-white py-2 rounded w-full ${
+    loading ? "bg-gray-600" : "bg-blue-600 hover:bg-blue-700"
+  }`}
+>
+  {loading ? (
+    <Spinner aria-label="Spinner button example" size="sm" light />
+  ) : (
+    "Login"
+  )}
+</button>
+
+
+        {/* <button disabled={loading} type="submit" className="text-white py-2 rounded w-full hover:bg-blue-700">
+        {loading? <Spinner aria-label="Spinner button example" size="sm" light /> : "Login"}
+          
+        </button> */}
       </form>
     </div>
     </div>
