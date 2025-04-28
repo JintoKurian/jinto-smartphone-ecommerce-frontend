@@ -30,7 +30,7 @@ export const addToCart = async (data, token) => {
     "POST",
     `${BASE_URL}/api/cart/add`,
     data,
-    
+
       {
         Authorization: `Bearer ${token}`,
       }
@@ -70,6 +70,54 @@ export const removeCartItem = async (itemId, token) => {
     "DELETE",
     `${BASE_URL}/api/cart/remove/${itemId}`,
     "",
+    {
+      Authorization: `Bearer ${token}`,
+    }
+  );
+};
+
+
+
+
+// Create Order - COD or Razorpay success
+export const placeOrder = async (orderData, token) => {
+  return await commonAPI(
+    "POST",
+    `${BASE_URL}/api/orders`,
+    orderData,
+    {
+      Authorization: `Bearer ${token}`,
+    }
+  );
+};
+
+// Create Razorpay Order (returns order_id)
+export const createRazorpayOrder = async (amount) => {
+  return await commonAPI(
+    "POST",
+    `${BASE_URL}/api/payment/create-order`,
+    { amount },
+    ""
+  );
+};
+
+// allAPI.js
+export const verifyPayment = async (paymentData, token) => {
+  return await commonAPI(
+    "POST",
+    `${BASE_URL}/api/payment/verify-payment`,
+    paymentData,
+    {
+      Authorization: `Bearer ${token}`,
+    }
+  );
+};
+
+export const updateOrderStatus = async (orderId, status, token) => {
+  return await commonAPI(
+    "PATCH",
+    `${BASE_URL}/api/orders/${orderId}`,
+    { status },
     {
       Authorization: `Bearer ${token}`,
     }

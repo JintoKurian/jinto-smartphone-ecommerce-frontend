@@ -1,9 +1,22 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { addToCart } from "../services/allAPI";
 
+
 const ProductCard = ({ product }) => {
+
+  const navigate = useNavigate();
+
+  const handleBuyNow = () => {
+    navigate("/checkout", {
+      state: {
+        items: [{ ...product, quantity: 1 }],
+        from: "product"
+      }
+    });
+  }
+
   const user = useSelector((state) => state.auth.user);
   const token = useSelector((state) => state.auth.token);
 
@@ -46,7 +59,7 @@ const ProductCard = ({ product }) => {
           >
             Add to cart
           </button>
-          <button className="px-3 py-1 rounded-md bg-yellow-400 text-black hover:bg-yellow-500 text-sm">
+          <button onClick={handleBuyNow} className="px-3 py-1 rounded-md bg-yellow-400 text-black hover:bg-yellow-500 text-sm">
             Buy
           </button>
         </div>

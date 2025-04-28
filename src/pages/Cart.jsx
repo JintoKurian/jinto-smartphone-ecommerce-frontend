@@ -1,10 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { getCartItems, updateCartItem, removeCartItem } from '../services/allAPI';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+
 
 const Cart = () => {
   const [cart, setCart] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const navigate = useNavigate();
+
+  const handleBuyFromCart = (item) => {
+    navigate("/checkout", {
+      state: {
+        items: [{ ...item.productId, quantity: item.quantity }],
+        from: "cart"
+      }
+    });
+  };
 
   const user = useSelector((state) => state.auth.user);
   const token = useSelector((state) => state.auth.token);
@@ -87,7 +100,7 @@ const Cart = () => {
                     </button>
                   </div>
                   <div className="flex gap-3 mt-3">
-                    <button className="bg-yellow-400 px-4 py-1 rounded text-black text-sm hover:bg-yellow-500">
+                    <button onClick={() => handleBuyFromCart(item)} className="bg-yellow-400 px-4 py-1 rounded text-black text-sm hover:bg-yellow-500">
                       Buy Now
                     </button>
                     <button
